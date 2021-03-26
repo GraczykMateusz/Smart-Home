@@ -1,10 +1,11 @@
 #define FAN 6
 
 #define MAX_FAN_SPEED 255
-#define DEFAULT_FAN_SPEED 70
-#define MIN_FAN_SPEED 0
+#define MIN_FAN_SPEED 70
 
-static int fanSpeed = DEFAULT_FAN_SPEED;
+#define TURN_OFF 0
+
+static int fanSpeed = MIN_FAN_SPEED;
 static bool isFanTurnOn = false;
 
 void turnOnFan() {
@@ -14,7 +15,7 @@ void turnOnFan() {
 
 void turnOffFan() {
   isFanTurnOn = false;
-  analogWrite(FAN, MIN_FAN_SPEED);
+  analogWrite(FAN, TURN_OFF);
 }
 
 void increaseFanSpeed() {
