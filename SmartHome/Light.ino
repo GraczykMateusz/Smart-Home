@@ -1,28 +1,62 @@
-#define LIGHT_UPSTAIRS   7
-#define LIGHT_DOWNSTAIRS 8
+#define MAX_LIGHTING_POWER 100
+#define DEFAULT_LIGHTING_POWER 20
+
+#define TURN_OFF 0
+
+#include <Adafruit_NeoPixel.h>
+
+static uint8_t lightingPower = DEFAULT_LIGHTING_POWER;
+static bool isLightTurnOn = false;
 
 void turnOnLights() {
-  digitalWrite(LIGHT_UPSTAIRS, HIGH);
-  digitalWrite(LIGHT_DOWNSTAIRS, HIGH); 
-}
+  isLightTurnOn = true;
 
-void turnOnLightUpstairs() {
-  digitalWrite(LIGHT_UPSTAIRS, HIGH);
-}
-
-void turnOnLightDownstairs() {
-  digitalWrite(LIGHT_DOWNSTAIRS, HIGH); 
+  for(int i = 0; i < LED_COUNT; ++i) {
+    lightUp.setPixelColor(i, lightUp.Color(lightingPower, lightingPower, lightingPower));
+    lightDown.setPixelColor(i, lightDown.Color(lightingPower, lightingPower, lightingPower));
+  }
+  
+  lightUp.show();
+  lightDown.show();
 }
 
 void turnOffLights() {
-  digitalWrite(LIGHT_UPSTAIRS, LOW);
-  digitalWrite(LIGHT_DOWNSTAIRS, LOW); 
+  isLightTurnOn = false;
+  lightingPower = DEFAULT_LIGHTING_POWER;
+
+  for(int i = 0; i < LED_COUNT; ++i) {
+    lightUp.setPixelColor(i, lightUp.Color(TURN_OFF, TURN_OFF, TURN_OFF));
+    lightDown.setPixelColor(i, lightDown.Color(TURN_OFF, TURN_OFF, TURN_OFF));
+  }
+  
+  lightUp.show();
+  lightDown.show();
 }
 
-void turnOffLightUpstairs() {
-  digitalWrite(LIGHT_UPSTAIRS, LOW);
+void increaseLightingPower() {
+  if(lightingPower < MAX_LIGHTING_POWER && isLightTurnOn) {
+    lightingPower += 5;
+
+    for(int i = 0; i < LED_COUNT; ++i) {
+      lightUp.setPixelColor(i, lightUp.Color(lightingPower, lightingPower, lightingPower));
+      lightDown.setPixelColor(i, lightDown.Color(lightingPower, lightingPower, lightingPower));
+    }
+    
+    lightUp.show();
+    lightDown.show();
+  }
 }
 
-void turnOffLightDownstairs() {
-  digitalWrite(LIGHT_DOWNSTAIRS, LOW); 
+void decreaseLightingPower() {
+  if(lightingPower > TURN_OFF && isLightTurnOn) {
+    lightingPower -= 5;
+
+    for(int i = 0; i < LED_COUNT; ++i) {
+      lightUp.setPixelColor(i, lightUp.Color(lightingPower, lightingPower, lightingPower));
+      lightDown.setPixelColor(i, lightDown.Color(lightingPower, lightingPower, lightingPower));
+    }
+    
+    lightUp.show();
+    lightDown.show();
+  }
 }
